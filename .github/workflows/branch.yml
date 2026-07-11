@@ -6,7 +6,7 @@ name: CI
 # events but only for the main branch.
 on:
   push:
-    branches: [ main ]
+    branches-ignore: [ main ]
 
 permissions:
   contents: write
@@ -27,7 +27,7 @@ jobs:
     - uses: actions/checkout@v7
       with:
         fetch-depth: 0
-    
+
     - name: Set safe directory
       run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
     
@@ -53,4 +53,5 @@ jobs:
     - name: Release
       uses: softprops/action-gh-release@v3
       with:
-        tag_name: ${{ env.majorMinorPatch }}
+        tag_name: ${{ env.semVer }}
+        prerelease: true
