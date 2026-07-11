@@ -1,12 +1,15 @@
 # This is a basic workflow to build robot code.
 
-name: CI-PR
+name: CI
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the main branch.
 on:
-  pull_request:
+  push:
     branches: [ main ]
+
+permissions:
+  contents: write
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -22,11 +25,32 @@ jobs:
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v7
-
-    # Grant execute permission for gradlew
+      with:
+        fetch-depth: 0
+    
+    - name: Set safe directory
+      run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+    
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
-    # Runs a single command using the runners shell
     - name: Compile and run tests on robot code
       run: ./gradlew build
+
+    - uses: actions/setup-dotnet@v5
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Install GitVersion
+      uses: gittools/actions/gitversion/setup@v4.7.0
+      with:
+        versionSpec: 6.8.x
+    
+    - name: Determine Version
+      id: version_step
+      uses: gittools/actions/gitversion/execute@v4.7.0
+
+    - name: Release
+      uses: softprops/action-gh-release@v3
+      with:
+        tag_name: ${{ env.majorMinorPatch }}
