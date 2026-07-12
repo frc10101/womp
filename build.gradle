@@ -95,7 +95,7 @@ java {
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            groupId = 'org.frc10101.womp'
+            groupId = 'org.frc10101'
             artifactId = 'womp'
             version = project.version
 
