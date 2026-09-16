@@ -1,5 +1,4 @@
 plugins {
-    id "java-library"
     id 'maven-publish'
     id "java"
     id "application"
@@ -17,8 +16,6 @@ if (project.hasProperty('projVersion')) {
 } else {
     project.version = '0.0.0'
 }
-
-def ROBOT_MAIN_CLASS = "first.Main"
 
 // Define my targets (RoboRIO) and artifacts (deployable files)
 // This is added by GradleRIO's backing project DeployUtils.
@@ -71,9 +68,6 @@ test {
 wpi.sim.addGui().defaultEnabled = true
 wpi.sim.addDriverstation()
 
-application.mainClass = ROBOT_MAIN_CLASS
-deployArtifact.configureApplication(application)
-wpi.java.configureApplication(application)
 wpi.java.configureTestTasks(test)
 
 // Configure string concat to always inline compile
